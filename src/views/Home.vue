@@ -6,13 +6,14 @@
     <div v-for="name in matchingNames" :key="name">
       {{ name }}
     </div>
+    <button @click="handleClick">Stop watch</button>
     
 
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, watchEffect } from 'vue';
 // @ is an alias to /src
 // import HelloWorld from '@/components/HelloWorld.vue'
 
@@ -21,11 +22,26 @@ export default {
   setup() {
     const search = ref('')
     const names = ref(['mario', 'yoshi', 'luigi', 'toad', 'bowser', 'koopa', 'peach'])
+
+    const stopWatch = watch(search, () => {
+      console.log('watch function ran')
+    })
+
+    const stopEffect = watchEffect(() => {
+  console.log('watchEffect function ran', search.value)
+    })
     
     const matchingNames = computed(() => {
         return names.value.filter((name) => name.includes(search.value))
     } )
-    return { names, search, matchingNames }
+
+    const handleClick = () => {
+      stopWatch()
+      stopEffect()
+    }
+
+
+    return { names, search, matchingNames, handleClick }
   }
 }
 </script>
